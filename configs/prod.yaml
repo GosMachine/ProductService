@@ -1,0 +1,4 @@
+env: "prod"
+grpc:
+  port: 44045
+  timeout: 3s
