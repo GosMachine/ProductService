@@ -45,6 +45,7 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 			Price:       v.Price,
 			Stock:       v.Stock,
 			Image:       v.ImageURL,
+			Fields:      &productv1.InputFields{Type: v.Fields.Type, Label: v.Fields.Label},
 		})
 	}
 	return &productv1.GetGategoryResponse{Description: category.Description, Items: items, Name: category.Name}, nil

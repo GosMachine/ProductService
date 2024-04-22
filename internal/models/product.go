@@ -21,7 +21,13 @@ type Product struct {
 	Stock       int64
 	CategoryID  int
 	Category    Category
+	Fields      InputFields
 	ImageURL    string
+}
+
+type InputFields struct {
+	Label string
+	Type  string
 }
 
 //todo product review
