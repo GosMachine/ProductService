@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/GosMachine/ProductService/internal/database/postgres"
 	"github.com/GosMachine/ProductService/internal/models"
 	"go.uber.org/zap"
 )
@@ -18,12 +19,12 @@ func (p *Product) GetCategory(name string) (*models.Category, error) {
 	return category, nil
 }
 
-func (p *Product) GetCategoryNames() ([]string, error) {
-	p.log.Info("getting category names")
-	categoryNames, err := p.redis.GetCategoryNames()
+func (p *Product) GetCategories() (*postgres.Categories, error) {
+	p.log.Info("getting categories")
+	categories, err := p.redis.GetCategories()
 	if err != nil {
-		p.log.Error("failed to get category names", zap.Error(err))
+		p.log.Error("failed to get categories", zap.Error(err))
 		return nil, ErrCategoryNotFound
 	}
-	return categoryNames, nil
+	return categories, nil
 }

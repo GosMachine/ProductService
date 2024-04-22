@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/GosMachine/ProductService/internal/database/postgres"
 	"github.com/GosMachine/ProductService/internal/models"
 	"github.com/GosMachine/ProductService/internal/services"
 	productv1 "github.com/GosMachine/protos/gen/go/product"
@@ -14,8 +15,8 @@ import (
 )
 
 type Product interface {
-	GetCategory(name string) (category *models.Category, err error)
-	GetCategoryNames() (categories []string, err error)
+	GetCategory(slug string) (category *models.Category, err error)
+	GetCategories() (categories *postgres.Categories, err error)
 }
 
 type serverAPI struct {
@@ -28,7 +29,7 @@ func RegisterAuthServer(gRPC *grpc.Server, product Product) {
 }
 
 func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryRequest) (*productv1.GetGategoryResponse, error) {
-	category, err := s.product.GetCategory(req.Name)
+	category, err := s.product.GetCategory(req.Slug)
 	if err != nil {
 		if errors.Is(err, services.ErrCategoryNotFound) {
 			return nil, status.Error(codes.InvalidArgument, "category not found")
@@ -45,13 +46,13 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 			Image:       v.ImageURL,
 		})
 	}
-	return &productv1.GetGategoryResponse{Description: category.Description, Items: items}, nil
+	return &productv1.GetGategoryResponse{Description: category.Description, Items: items, Name: category.Name}, nil
 }
 
-func (s *serverAPI) GetCategoryNames(ctx context.Context, req *emptypb.Empty) (*productv1.GetCategoryNamesResponse, error) {
-	categories, err := s.product.GetCategoryNames()
+func (s *serverAPI) GetCategories(ctx context.Context, req *emptypb.Empty) (*productv1.GetCategoriesResponse, error) {
+	categories, err := s.product.GetCategories()
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
 	}
-	return &productv1.GetCategoryNamesResponse{Names: categories}, nil
+	return &productv1.GetCategoriesResponse{Names: categories.Names, Slugs: categories.Slugs}, nil
 }
