@@ -17,3 +17,13 @@ func (p *Product) GetCategory(name string) (*models.Category, error) {
 	}
 	return category, nil
 }
+
+func (p *Product) GetCategoryNames() ([]string, error) {
+	p.log.Info("getting category names")
+	categoryNames, err := p.redis.GetCategoryNames()
+	if err != nil {
+		p.log.Error("failed to get category names", zap.Error(err))
+		return nil, ErrCategoryNotFound
+	}
+	return categoryNames, nil
+}

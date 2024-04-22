@@ -22,6 +22,7 @@ type Database interface {
 
 type Redis interface {
 	GetCategory(name string) (category *models.Category, err error)
+	GetCategoryNames() (categories []string, err error)
 }
 
 func New(log *zap.Logger, db *postgres.Storage, redis *redis.Redis) *Product {

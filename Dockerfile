@@ -13,4 +13,4 @@ COPY --from=build /build/prod.yaml /configs/prod.yaml
 
 ENTRYPOINT ["/app"]
 
-# docker build -t gosmach1ne/ecommerceservice .
+# docker build -t gosmach1ne/productservice .

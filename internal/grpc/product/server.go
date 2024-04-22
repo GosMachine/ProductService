@@ -10,10 +10,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Product interface {
 	GetCategory(name string) (category *models.Category, err error)
+	GetCategoryNames() (categories []string, err error)
 }
 
 type serverAPI struct {
@@ -44,4 +46,12 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 		})
 	}
 	return &productv1.GetGategoryResponse{Description: category.Description, Items: items}, nil
+}
+
+func (s *serverAPI) GetCategoryNames(ctx context.Context, req *emptypb.Empty) (*productv1.GetCategoryNamesResponse, error) {
+	categories, err := s.product.GetCategoryNames()
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
+	}
+	return &productv1.GetCategoryNamesResponse{Names: categories}, nil
 }

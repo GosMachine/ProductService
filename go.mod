@@ -3,7 +3,7 @@ module github.com/GosMachine/ProductService
 go 1.22.2
 
 require (
-	github.com/GosMachine/protos v0.4.2
+	github.com/GosMachine/protos v0.4.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/redis/go-redis/v9 v9.5.1
 	go.uber.org/zap v1.27.0
