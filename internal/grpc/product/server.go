@@ -40,6 +40,7 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 	for _, v := range category.Products {
 		items = append(items, &productv1.Item{
 			Name:        v.Name,
+			Slug:        v.Slug,
 			Description: v.Description,
 			Price:       v.Price,
 			Stock:       v.Stock,

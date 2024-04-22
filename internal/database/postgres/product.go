@@ -18,9 +18,9 @@ func (s *Storage) CreateCategory(name, description string) (models.Category, err
 	return category, nil
 }
 
-func (s *Storage) GetCategory(name string) (*models.Category, error) {
+func (s *Storage) GetCategory(slug string) (*models.Category, error) {
 	var category models.Category
-	if err := s.db.Preload("Products").Where("name = ?", name).First(&category).Error; err != nil {
+	if err := s.db.Preload("Products").Where("slug = ?", slug).First(&category).Error; err != nil {
 		return nil, err
 	}
 	return &category, nil
