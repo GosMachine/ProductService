@@ -17,6 +17,7 @@ import (
 type Product interface {
 	GetCategory(slug string) (category *models.Category, err error)
 	GetCategories() (categories *postgres.Categories, err error)
+	Checkout(req *productv1.CheckoutRequest) (url string, err error)
 }
 
 type serverAPI struct {
@@ -38,6 +39,11 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 	}
 	var items []*productv1.Item
 	for _, v := range category.Products {
+		var fields []*productv1.InputFields
+		v.Fields = append(v.Fields, models.InputField{Label: "Count", Type: "count"})
+		for _, value := range v.Fields {
+			fields = append(fields, &productv1.InputFields{Label: value.Label, Type: value.Type})
+		}
 		items = append(items, &productv1.Item{
 			Name:        v.Name,
 			Slug:        v.Slug,
@@ -45,7 +51,7 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 			Price:       v.Price,
 			Stock:       v.Stock,
 			Image:       v.ImageURL,
-			Fields:      &productv1.InputFields{Type: v.Fields.Type, Label: v.Fields.Label},
+			Fields:      fields,
 		})
 	}
 	return &productv1.GetGategoryResponse{Description: category.Description, Items: items, Name: category.Name}, nil
@@ -57,4 +63,12 @@ func (s *serverAPI) GetCategories(ctx context.Context, req *emptypb.Empty) (*pro
 		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
 	}
 	return &productv1.GetCategoriesResponse{Names: categories.Names, Slugs: categories.Slugs}, nil
+}
+
+func (s *serverAPI) Checkout(ctx context.Context, req *productv1.CheckoutRequest) (*productv1.CheckoutResponse, error) {
+	url, err := s.product.Checkout(req)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
+	}
+	return &productv1.CheckoutResponse{Url: url}, nil
 }

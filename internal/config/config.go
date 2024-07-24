@@ -13,7 +13,6 @@ type Config struct {
 }
 
 type GRPCConfig struct {
-	Port    int
 	Timeout time.Duration `yaml:"timeout"`
 }
 

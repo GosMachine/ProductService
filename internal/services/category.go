@@ -6,12 +6,12 @@ import (
 	"go.uber.org/zap"
 )
 
-func (p *Product) GetCategory(name string) (*models.Category, error) {
+func (p *Product) GetCategory(slug string) (*models.Category, error) {
 	log := p.log.With(
-		zap.String("name", name),
+		zap.String("slug", slug),
 	)
 	log.Info("getting category")
-	category, err := p.redis.GetCategory(name)
+	category, err := p.redis.GetCategory(slug)
 	if err != nil {
 		log.Error("failed to get category", zap.Error(err))
 		return nil, ErrCategoryNotFound

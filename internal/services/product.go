@@ -21,7 +21,7 @@ type Database interface {
 }
 
 type Redis interface {
-	GetCategory(name string) (category *models.Category, err error)
+	GetCategory(slug string) (category *models.Category, err error)
 	GetCategories() (categories *postgres.Categories, err error)
 }
 
