@@ -10,6 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
+//todo подумать что делать с кэшем категорий а продукта
+
 func (r *Redis) GetCategory(slug string) (*models.Category, error) {
 	var (
 		err      error
