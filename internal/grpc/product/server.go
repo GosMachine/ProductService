@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/GosMachine/ProductService/internal/database/postgres"
 	"github.com/GosMachine/ProductService/internal/models"
 	"github.com/GosMachine/ProductService/internal/services"
+	"github.com/GosMachine/ProductService/internal/storage/database"
 	productv1 "github.com/GosMachine/protos/gen/go/product"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -16,8 +16,7 @@ import (
 
 type Product interface {
 	GetCategory(slug string) (category *models.Category, err error)
-	GetCategories() (categories *postgres.Categories, err error)
-	Checkout(req *productv1.CheckoutRequest) (url string, err error)
+	GetCategories() (categories []database.Category, err error)
 }
 
 type serverAPI struct {
@@ -60,15 +59,22 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 func (s *serverAPI) GetCategories(ctx context.Context, req *emptypb.Empty) (*productv1.GetCategoriesResponse, error) {
 	categories, err := s.product.GetCategories()
 	if err != nil {
+		if errors.Is(err, services.ErrCategoryNotFound) {
+			return nil, status.Error(codes.InvalidArgument, "category not found")
+		}
 		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
 	}
-	return &productv1.GetCategoriesResponse{Names: categories.Names, Slugs: categories.Slugs}, nil
+	var resultCategories []*productv1.Category
+	for _, v := range categories {
+		resultCategories = append(resultCategories, &productv1.Category{Name: v.Name, Slug: v.Slug})
+	}
+	return &productv1.GetCategoriesResponse{Categories: resultCategories}, nil
 }
 
-func (s *serverAPI) Checkout(ctx context.Context, req *productv1.CheckoutRequest) (*productv1.CheckoutResponse, error) {
-	url, err := s.product.Checkout(req)
-	if err != nil {
-		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
-	}
-	return &productv1.CheckoutResponse{Url: url}, nil
-}
+// func (s *serverAPI) Checkout(ctx context.Context, req *productv1.CheckoutRequest) (*productv1.CheckoutResponse, error) {
+// 	url, err := s.product.Checkout(req)
+// 	if err != nil {
+// 		return nil, status.Error(codes.Internal, "Internal server error. Please try again.")
+// 	}
+// 	return &productv1.CheckoutResponse{Url: url}, nil
+// }

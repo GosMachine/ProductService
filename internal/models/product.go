@@ -26,7 +26,6 @@ type Product struct {
 	Stock         int64
 	CategoryID    int
 	NumberOfSales int
-	Category      Category
 	Fields        InputFields
 	ImageURL      string
 }

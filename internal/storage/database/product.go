@@ -45,11 +45,3 @@ func (d *Database) GetCategories() ([]Category, error) {
 	}
 	return categories, nil
 }
-
-func (d *Database) GetProduct(slug string) (models.Product, error) {
-	var product models.Product
-	if err := d.db.Where("slug = ?", slug).First(&product).Error; err != nil {
-		return models.Product{}, err
-	}
-	return product, nil
-}
