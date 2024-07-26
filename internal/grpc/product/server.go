@@ -16,7 +16,9 @@ import (
 
 type Product interface {
 	GetCategory(slug string) (category *models.Category, err error)
+	GetProduct(categorySlug, productSlug string) (product *models.Product, err error)
 	GetCategories() (categories []database.Category, err error)
+	CreateTicket(name, email, message, ip string) error
 }
 
 type serverAPI struct {
@@ -38,19 +40,11 @@ func (s *serverAPI) GetCategory(ctx context.Context, req *productv1.GetCategoryR
 	}
 	var items []*productv1.Item
 	for _, v := range category.Products {
-		var fields []*productv1.InputFields
-		v.Fields = append(v.Fields, models.InputField{Label: "Count", Type: "count"})
-		for _, value := range v.Fields {
-			fields = append(fields, &productv1.InputFields{Label: value.Label, Type: value.Type})
-		}
 		items = append(items, &productv1.Item{
-			Name:        v.Name,
-			Slug:        v.Slug,
-			Description: v.Description,
-			Price:       v.Price,
-			Stock:       v.Stock,
-			Image:       v.ImageURL,
-			Fields:      fields,
+			Name:  v.Name,
+			Slug:  v.Slug,
+			Price: v.Price,
+			Image: v.ImageURL,
 		})
 	}
 	return &productv1.GetGategoryResponse{Description: category.Description, Items: items, Name: category.Name}, nil
@@ -69,6 +63,29 @@ func (s *serverAPI) GetCategories(ctx context.Context, req *emptypb.Empty) (*pro
 		resultCategories = append(resultCategories, &productv1.Category{Name: v.Name, Slug: v.Slug})
 	}
 	return &productv1.GetCategoriesResponse{Categories: resultCategories}, nil
+}
+
+func (s *serverAPI) GetProduct(ctx context.Context, req *productv1.GetProductRequest) (*productv1.GetProductResponse, error) {
+	product, err := s.product.GetProduct(req.CategorySlug, req.ProductSlug)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	productResponse := productv1.GetProductResponse{Description: product.Description, Stock: product.Stock}
+	productResponse.Fields = append(productResponse.Fields, &productv1.InputFields{Label: "Quantity", Type: "quantity"})
+	for _, value := range product.Fields {
+		productResponse.Fields = append(productResponse.Fields, &productv1.InputFields{Label: value.Label, Type: value.Type})
+	}
+	productResponse.Item = &productv1.Item{Name: product.Name, Slug: product.Slug, Price: product.Price, Image: product.ImageURL}
+
+	return &productResponse, nil
+}
+
+func (s *serverAPI) CreateTicket(ctx context.Context, req *productv1.CreateTicketRequest) (*emptypb.Empty, error) {
+	err := s.product.CreateTicket(req.Name, req.Email, req.Message, req.IP)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // func (s *serverAPI) Checkout(ctx context.Context, req *productv1.CheckoutRequest) (*productv1.CheckoutResponse, error) {
