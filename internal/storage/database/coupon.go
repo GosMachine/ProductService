@@ -13,7 +13,7 @@ type Coupon interface {
 	DeleteCoupon(code string) error
 }
 
-func (d *Database) GetCoupon(code string) (models.Coupon, error) {
+func (d *database) GetCoupon(code string) (models.Coupon, error) {
 	var coupon models.Coupon
 	if err := d.db.Where("code = ?", code).First(&coupon).Error; err != nil {
 		return models.Coupon{}, err
@@ -21,7 +21,7 @@ func (d *Database) GetCoupon(code string) (models.Coupon, error) {
 	return coupon, nil
 }
 
-func (d *Database) UpdateCoupon(coupon models.Coupon) error {
+func (d *database) UpdateCoupon(coupon models.Coupon) error {
 	err := d.db.Save(&coupon).Error
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func (d *Database) UpdateCoupon(coupon models.Coupon) error {
 	return nil
 }
 
-func (d *Database) CreateCoupon(code string, value float64, valueType models.ValueTypeEnum, maxUsageCount, usageCount int, expiresAt *time.Time) error {
+func (d *database) CreateCoupon(code string, value float64, valueType models.ValueTypeEnum, maxUsageCount, usageCount int, expiresAt *time.Time) error {
 	coupon := models.Coupon{
 		Code:          code,
 		Value:         value,
@@ -45,7 +45,7 @@ func (d *Database) CreateCoupon(code string, value float64, valueType models.Val
 	return nil
 }
 
-func (d *Database) DeleteCoupon(code string) error {
+func (d *database) DeleteCoupon(code string) error {
 	err := d.db.Where("code = ?", code).Delete(&models.Coupon{}).Error
 	if err != nil {
 		return err

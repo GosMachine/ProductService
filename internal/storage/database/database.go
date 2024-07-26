@@ -9,15 +9,18 @@ import (
 	"gorm.io/gorm"
 )
 
-type Database struct {
-	db      *gorm.DB
-	Cart    Cart
-	Coupon  Coupon
-	Product Product
-	Contact Contact
+type database struct {
+	db *gorm.DB
 }
 
-func New() (*Database, error) {
+type Database interface {
+	Product
+	Cart
+	Contact
+	Coupon
+}
+
+func New() (Database, error) {
 	connection := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_DATABASE"))
 	db, err := gorm.Open(postgres.Open(connection), &gorm.Config{})
 	if err != nil {
@@ -27,5 +30,5 @@ func New() (*Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Database{db: db}, nil
+	return &database{db: db}, nil
 }

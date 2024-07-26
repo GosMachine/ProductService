@@ -53,7 +53,7 @@ func (r *Redis) GetCategories() ([]database.Category, error) {
 			return categories, nil
 		}
 	}
-	categories, err = r.db.Product.GetCategories()
+	categories, err = r.db.GetCategories()
 	if err != nil {
 		return nil, err
 	}

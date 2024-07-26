@@ -14,11 +14,11 @@ var ErrCategoryNotFound = errors.New("category not found")
 
 type Product struct {
 	log   *zap.Logger
-	db    *database.Database
+	db    database.Database
 	redis redis.Service
 }
 
-func New(log *zap.Logger, db *database.Database, redis redis.Service) *Product {
+func New(log *zap.Logger, db database.Database, redis redis.Service) *Product {
 	return &Product{
 		log:   log,
 		db:    db,

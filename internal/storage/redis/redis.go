@@ -11,7 +11,7 @@ import (
 
 type Redis struct {
 	client *redis.Client
-	db     *database.Database
+	db     database.Database
 	log    *zap.Logger
 }
 
@@ -22,7 +22,7 @@ type Service interface {
 	SetCategoriesCache(categories []database.Category) error
 }
 
-func New(db *database.Database, log *zap.Logger) Service {
+func New(db database.Database, log *zap.Logger) Service {
 	client := redis.NewClient(&redis.Options{
 		Addr:     os.Getenv("REDIS_ADDR"),
 		Password: os.Getenv("REDIS_PASS"),

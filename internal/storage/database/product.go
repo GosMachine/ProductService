@@ -5,7 +5,7 @@ import (
 )
 
 type Product interface {
-	CreateCategory(name, description string) (models.Category, error)
+	CreateCategory(name, slug, description string) (models.Category, error)
 	GetCategory(slug string) (models.Category, error)
 	GetCategories() ([]Category, error)
 }
@@ -15,7 +15,7 @@ type Category struct {
 	Slug string
 }
 
-func (d *Database) CreateCategory(name, slug, description string) (models.Category, error) {
+func (d *database) CreateCategory(name, slug, description string) (models.Category, error) {
 	category := models.Category{Name: name, Slug: slug, Description: description}
 
 	if err := d.db.Create(&category).Error; err != nil {
@@ -24,7 +24,7 @@ func (d *Database) CreateCategory(name, slug, description string) (models.Catego
 	return category, nil
 }
 
-func (d *Database) GetCategory(slug string) (models.Category, error) {
+func (d *database) GetCategory(slug string) (models.Category, error) {
 	var category models.Category
 	if err := d.db.Preload("Products").Where("slug = ?", slug).First(&category).Error; err != nil {
 		return models.Category{}, err
@@ -32,7 +32,7 @@ func (d *Database) GetCategory(slug string) (models.Category, error) {
 	return category, nil
 }
 
-func (d *Database) GetCategories() ([]Category, error) {
+func (d *database) GetCategories() ([]Category, error) {
 	var (
 		categoriesFromDb []*models.Category
 		categories       []Category
