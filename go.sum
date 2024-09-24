@@ -3,6 +3,8 @@ github.com/BurntSushi/toml v1.4.0 h1:kuoIxZQy2WRRk1pttg9asf+WVv6tWQuBNVmK8+nqPr0
 github.com/BurntSushi/toml v1.4.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/GosMachine/protos v0.9.9 h1:ZLMwn8RPLjHtJNpgeW7/i5hViJTf1jXQskA3Hx5Uoxo=
 github.com/GosMachine/protos v0.9.9/go.mod h1:GGlwldf+ADA5sp/6O60N5uH4hDTHUek4UhzWS9sBFa8=
+github.com/GosMachine/protos v0.9.21 h1:AInn/tVWIft3SqBfweywR9GCrgWtjMCnx3WipX9DzC4=
+github.com/GosMachine/protos v0.9.21/go.mod h1:GGlwldf+ADA5sp/6O60N5uH4hDTHUek4UhzWS9sBFa8=
 github.com/bsm/ginkgo/v2 v2.12.0 h1:Ny8MWAHyOepLGlLKYmXG4IEkioBysk6GpaRTLC8zwWs=
 github.com/bsm/ginkgo/v2 v2.12.0/go.mod h1:SwYbGRRDovPVboqFv0tPTcG1sN61LM1Z4ARdbAV9g4c=
 github.com/bsm/gomega v1.27.10 h1:yeMWxP2pV2fG3FgAODIY8EiRE3dy0aeFYt4l7wh6yKA=

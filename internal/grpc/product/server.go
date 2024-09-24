@@ -70,8 +70,8 @@ func (s *serverAPI) GetProduct(ctx context.Context, req *productv1.GetProductReq
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	productResponse := productv1.GetProductResponse{Description: product.Description, Stock: product.Stock}
-	productResponse.Fields = append(productResponse.Fields, &productv1.InputFields{Label: "Quantity", Type: "quantity"})
+	productResponse := productv1.GetProductResponse{Description: product.Description, Stock: product.Stock, NumberOfSales: int64(product.NumberOfSales)}
+	productResponse.Fields = append(productResponse.Fields, &productv1.InputFields{Label: "Quantity", Type: "number"})
 	for _, value := range product.Fields {
 		productResponse.Fields = append(productResponse.Fields, &productv1.InputFields{Label: value.Label, Type: value.Type})
 	}

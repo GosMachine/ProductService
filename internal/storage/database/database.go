@@ -15,7 +15,6 @@ type database struct {
 
 type Database interface {
 	Product
-	Cart
 	Contact
 	Coupon
 }
@@ -26,7 +25,7 @@ func New() (Database, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = db.AutoMigrate(models.CartItem{}, models.Category{}, models.Coupon{}, models.Product{}, models.Contact{})
+	err = db.AutoMigrate(models.Category{}, models.Coupon{}, models.Product{}, models.Contact{})
 	if err != nil {
 		return nil, err
 	}
