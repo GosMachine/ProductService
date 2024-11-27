@@ -20,8 +20,8 @@ func New(log *zap.Logger) *App {
 		panic(err)
 	}
 	redis := redis.New(db, log)
-	authService := product.New(log, db, redis)
-	grpcApp := grpcapp.New(log, authService, os.Getenv("PRODUCT_SERVICE_ADDR"))
+	productService := product.New(log, db, redis)
+	grpcApp := grpcapp.New(log, productService, os.Getenv("PRODUCT_SERVICE_ADDR"))
 	return &App{
 		GRPCSrv: grpcApp,
 	}
